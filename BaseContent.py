@@ -29,7 +29,7 @@ class BaseContent:
     
     #get web page source code
     #code: stock code
-    def GetSourceCode(self,code,isStore=False):
+    def GetSourceCode(self,code,isStore=False,isPureData=False):
         logger.info('try to get '+self.url % code)
         f=urllib.urlopen(self.url % code)
         if(isStore):
@@ -37,7 +37,7 @@ class BaseContent:
             ft.write(f.read())
             ft.close
         return f.read()
-    def GetSourceCode_request(self,code,isStore=False):
+    def GetSourceCode_request(self,code,isStore=False,isPureData=False):
         logger.info('try to get '+self.url % code)
         response=requests.get(self.url %code)
         if(isStore):
@@ -45,9 +45,20 @@ class BaseContent:
             ft.write((response.text).encode('gbk'))
             ft.close
         return response.text
-
+    def preProcess(self,content):
+        pass
+        
+    def analyze(self,content):
+        pass
+    
+    def saveContent(self,content):
+        if(self.type =='excel'):
+            pass
+        elif(self.type =='csv'):
+            pass
 if __name__=='__main__':
     com.init_logger()
     testConfig=Config('http://data.eastmoney.com/gdhs/detail/%s.html','excel','test')
+    testConfig2=Config("http://dcfm.eastmoney.com//em_mutisvcexpandinterface/api/js/get?type=HOLDERNUM&token=70f12f2f4f091e459a279469fe49eca5&sty=detail&filter=(securitycode='%s')&st=EndDate&sr=1&js={data:(x),pages:(tp)}",'excel','test')
     mycontent=BaseContent(testConfig)
-    mycontent.GetSourceCode_request('000065',True)
+    mycontent.GetSourceCode('000065',True)
