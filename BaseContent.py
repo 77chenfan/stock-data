@@ -32,19 +32,21 @@ class BaseContent:
     def GetSourceCode(self,code,isStore=False,isPureData=False):
         logger.info('try to get '+self.url % code)
         f=urllib.urlopen(self.url % code)
+        content=f.read()
         if(isStore):
             ft=open(code+'_sourcecode.html','w+')
-            ft.write(f.read())
+            ft.write(content)
             ft.close
-        return f.read()
+        return content
     def GetSourceCode_request(self,code,isStore=False,isPureData=False):
         logger.info('try to get '+self.url % code)
         response=requests.get(self.url %code)
+        content = response.text
         if(isStore):
             ft=open(code+'_sourcecode.html','w+')
-            ft.write((response.text).encode('gbk'))
+            ft.write((content).encode('gbk'))
             ft.close
-        return response.text
+        return content
     def preProcess(self,content):
         pass
         
