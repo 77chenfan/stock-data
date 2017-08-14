@@ -9,7 +9,7 @@ base class used for getting content from web page
 """
 import collections
 import urllib
-import com
+import logging
 import requests
 """
 url        : get web page
@@ -18,19 +18,18 @@ name       : content name
 """
 Config=collections.namedtuple('contentConfig',['url','outputType','name'])
 
-logger = com.logger
-
 class BaseContent:
     
     def __init__(self,config):
         self.url=config.url
         self.type=config.outputType
         self.name=config.name
+        self.logger=logging.getLogger(self.name)
     
     #get web page source code
     #code: stock code
     def GetSourceCode(self,code,isStore=False,isPureData=False):
-        logger.info('try to get '+self.url % code)
+        self.logger.info('try to get '+self.url % code)
         f=urllib.urlopen(self.url % code)
         content=f.read()
         if(isStore):
@@ -39,7 +38,7 @@ class BaseContent:
             ft.close
         return content
     def GetSourceCode_request(self,code,isStore=False,isPureData=False):
-        logger.info('try to get '+self.url % code)
+        self.logger.info('try to get '+self.url % code)
         response=requests.get(self.url %code)
         content = response.text
         if(isStore):
@@ -59,7 +58,6 @@ class BaseContent:
         elif(self.type =='csv'):
             pass
 if __name__=='__main__':
-    com.init_logger()
     testConfig=Config('http://data.eastmoney.com/gdhs/detail/%s.html','excel','test')
     testConfig2=Config("http://dcfm.eastmoney.com//em_mutisvcexpandinterface/api/js/get?type=HOLDERNUM&token=70f12f2f4f091e459a279469fe49eca5&sty=detail&filter=(securitycode='%s')&st=EndDate&sr=1&js={data:(x),pages:(tp)}",'excel','test')
     mycontent=BaseContent(testConfig)
