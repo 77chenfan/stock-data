@@ -12,7 +12,8 @@ import urllib
 def GetAllStockCodes():
     #df = ts.get_stock_basics()
     #print type(df)
-    patten = r"http://quote.eastmoney.com/sz[0-9]*.html"
+    patten = r"http://quote.eastmoney.com/s[zh][0-9]*.html"
+    #tensh = r"http://quote.eastmoney.com/sh[0-9]*.html"
     patten_code = r"[0-9]+"
     url = "http://quote.eastmoney.com/stocklist.html"
     webpage = urllib.urlopen(url).read()
@@ -28,4 +29,8 @@ def GetStockPrice(code,st,ed):
     return df
 
 if __name__ == '__main__':
-    GetStockPrice('600415','2017-08-04','2017-08-04')
+    #GetStockPrice('600415','2017-08-04','2017-08-04')
+    f1=open("stocklist.txt",'w+')
+    stocklist = GetAllStockCodes()
+    f1.write(str(stocklist))
+    f1.close()
